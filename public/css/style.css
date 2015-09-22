@@ -1,0 +1,42 @@
+body{
+	background-color: #084D68;
+}
+
+.top-info{
+	background-color: #084D68; 
+	height: 20px; 
+	margin-bottom: 50px;
+}
+
+.container{
+	color: #CCF186;
+}
+
+.card{
+	background-color: #69C181;
+}
+
+.card-mana{
+	background-color: royalblue;
+	width: 30px;
+	float: left;
+}
+
+.card-count{
+	background-color: black;
+	width: 20px;
+	float: right;
+}
+
+.race-item{
+	background-color: green;
+}
+.race-count{
+	background-color: black;
+	width: 20px;
+	float: right;
+}
+
+.cards-space{
+	background-color: #FFEEB0;
+}

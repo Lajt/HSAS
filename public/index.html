@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HSAS</title>
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body ng-app="HSApp" ng-controller="MainCtrl">
+    <div class="top-info">
+        <span>HS Arena Share | {{online}}</span>
+    </div>
+    <div class="container">
+    <div class="row">
+                <div class="col-lg-2 col-lg-offset-1 text-center">
+                    <p class="cardOne text-center">Test Card One </p>
+                    <img class="img-responsive OneImg" src="/img/testcard.png" alt="">
+                    <span class="OneDesc">{{test}}</span>
+                </div>
+                <div class="col-lg-2 text-center">
+                    <p class="cardTwo text-center">Test Card Two </p>
+                    <img class="img-responsive TwoImg" src="/img/testcard.png" alt="">
+                    <span class="TwoDesc"></span>
+                </div>
+                <div class="col-lg-2 text-center">
+                   <p class="cardThree text-center">Test Card Three </p>
+                   <img class="img-responsive ThreeImg" src="/img/testcard.png" alt="">
+                   <span class="ThreeDesc"></span>
+                </div>
+                <div class="col-lg-3 text-center">
+                    <ul class="list-group lajt">
+                        <li ng-repeat="card in cards" class ='list-group-item card'>
+                            <span class="card-mana">{{card.mana}}</span>
+                            <span class ="card-name">{{card.name}}</span>
+                            <span class ="card-count">x{{card.count}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="row">
+        <div class="col-lg-2 col-lg-offset-1 text-center" >
+            <ul class="list-group">
+            <li class="list-group-item race-item" ng-repeat="race in races" ng-show='{{race.count}}'>
+            <span class="race-name">{{race.name}}</span>
+            <span class="race-count">x{{race.count}}</span>
+            </li>
+            </ul>
+        </div>
+            <div class="col-lg-8">
+           
+                    <div style="width: 50%">
+                    <canvas id="canvas" height="450" width="600"></canvas>
+                    </div>
+                    
+                    
+                    <script>
+                    
+                    </script>
+           
+           
+           
+           </div>
+     </div>
+     </div>
+     
+     
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+    
+    <script src="/js/angular-fusioncharts.min.js"></script>
+    
+    <script src="/js/Chart.min.js"></script>
+    
+    <script src="/js/main.js"></script>
+    
+    <script src="/js/app.js"></script>
+
+
+    
+</body>
+</html>

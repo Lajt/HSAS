@@ -29,4 +29,8 @@ node_modules
 # Typings
 typings
 
+#bower
 bower_components
+
+# visual code settings
+.vscode

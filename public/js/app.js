@@ -45,25 +45,30 @@ app.controller('MainCtrl', [
 		
 		// New card choosen
 		io.on('update', function(data){
+			
 			// Log basic info
 			// name: String, className: String, 
 			// cards: [{ cardName: String, cardRace: String, cardMana: Number }]
 			console.log(data.hero);
 			console.log(data.cards);
-			// asingn choosen cards from database
+			// asign choosen cards from database
 			var cardsDB = data.cards;
-			// clear array with cards
+			// clear cards array
 			$scope.cards = [];
+			resetMana();
 			
 			// add cards to scope but if duplicate increament count
 			for(var i=0; i < cardsDB.length ; i++){
-				// check if 'i' card is in $scope.cards variable
+				
+				var cardMana = cardsDB[i].cardMana;
 				var index = checkCard(cardsDB[i].cardName);
+				
+				// check if 'i' card is in $scope.cards variable
 				if(index === -1){
 					// if no, add new card to array
 					$scope.cards.push({
 						name: cardsDB[i].cardName,
-						mana: cardsDB[i].cardMana,
+						mana: cardMana,
 						count: 1
 						});
 				}
@@ -76,34 +81,48 @@ app.controller('MainCtrl', [
 					if(indexRace !== -1){
 						$scope.races[indexRace].count++;
 					}
+				// add info to mana curve
+				if(cardMana > 7){
+					manaChart.datasets[0].bars[7].value++;
+				}
+				else{
+					manaChart.datasets[0].bars[cardMana].value++;
+				}
 				
 			}
-			// apply changes
-			$scope.$apply();
 			
+			// apply changes
+			manaChart.update();
+			$scope.$apply();
+						
 		})
 		// debug info
 		$scope.test = 'Hello World!';
 		console.log(checkRace("Totem"));
 		
 		// chart with mana curve
-				var barChartData = {
-			labels : ["0","1","2","3","4","5","6", "7+"],
-			datasets : [
-			{
-				fillColor : "rgba(220,220,220,0.5)",
-				strokeColor : "rgba(220,220,220,0.8)",
-				highlightFill: "rgba(220,220,220,0.75)",
-				highlightStroke: "rgba(220,220,220,1)",
-				data : [1,3,6,5,5,4,2,2]
-			}
-			]
-			}
-			window.onload = function(){
+			var barChartData = {
+				labels : ["0","1","2","3","4","5","6", "7+"],
+				datasets : [
+				{
+					fillColor : "rgba(220,220,220,0.5)",
+					strokeColor : "rgba(220,220,220,0.8)",
+					highlightFill: "rgba(220,220,220,0.75)",
+					highlightStroke: "rgba(220,220,220,1)",
+					data : [0,0,0,0,0,0,0,0]
+				}
+				]
+				}
 			var ctx = document.getElementById("canvas").getContext("2d");
-			window.myBar = new Chart(ctx).Bar(barChartData, {
+			var manaChart = new Chart(ctx).Bar(barChartData, {
 			responsive : true
 			});
+			
+			//reset chart values
+			function resetMana(){
+				for(var i =0; i < 8; i++){
+					manaChart.datasets[0].bars[i].value = 0;
+				}
 			}
 			
 			// check if input variable exist in race array

@@ -34,3 +34,6 @@ bower_components
 
 # visual code settings
 .vscode
+
+#Mashape-Key
+api.key

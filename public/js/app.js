@@ -1,8 +1,9 @@
+/* global io */
 var app = angular.module('HSApp', []);
 
 app.controller('MainCtrl', [
-	'$scope', 
-	function($scope){
+	'$scope', '$http', 
+	function($scope, $http){
 		
 		io = io.connect()
 		
@@ -30,6 +31,13 @@ app.controller('MainCtrl', [
 			{ name: 'Pirate', count: 0 },
 			{ name: 'Totem', count: 0 }
 		];
+		
+		$scope.currentCards = [
+			{name: '', img: '/img/testcard.png', desc: ''},
+			{name: '', img: '/img/testcard.png', desc: ''},
+			{name: '', img: '/img/testcard.png', desc: ''}
+		];
+		
 		// How many people online on site
 		$scope.online = 0;
 		// How many cards drafted already
@@ -42,6 +50,26 @@ app.controller('MainCtrl', [
 			$scope.online = data.count;
 			$scope.$apply();
 		})  
+		io.on('detected', function(data) {
+			console.log(data);
+			console.log(typeof(data));
+			console.log(data.length);
+			
+			// render detected cards
+			for(var i =0; i < 3; i++){
+				$scope.currentCards[i].name = data[i].name;
+				$scope.currentCards[i].img = data[i].img;
+			}
+			$scope.$apply();
+			
+		})
+		
+		/*$http.get('/api/card/Imp Master').
+		then(function(crd){
+			console.log(crd.flavor);
+		}, function(err){
+			console.log(err);
+		});*/
 		
 		// New card choosen
 		io.on('update', function(data){

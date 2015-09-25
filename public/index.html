@@ -23,21 +23,14 @@
     </div>
     <div class="container">
     <div class="row">
-                <div class="col-lg-2 col-lg-offset-1 text-center">
-                    <p class="cardOne text-center">Test Card One </p>
-                    <img class="img-responsive OneImg" src="/img/testcard.png" alt="">
-                    <span class="OneDesc">{{test}}</span>
-                </div>
+                <div class="draft-cards" ng-repeat="currentCard in currentCards">
                 <div class="col-lg-2 text-center">
-                    <p class="cardTwo text-center">Test Card Two </p>
-                    <img class="img-responsive TwoImg" src="/img/testcard.png" alt="">
-                    <span class="TwoDesc"></span>
+                    <p class="cardBig text-center">{{currentCard.name}}</p>
+                    <img class="img-responsive OneImg" ng-src="{{currentCard.img}}" alt="">
+                    <span class="OneDesc">{{currentCard.desc}}</span>
                 </div>
-                <div class="col-lg-2 text-center">
-                   <p class="cardThree text-center">Test Card Three </p>
-                   <img class="img-responsive ThreeImg" src="/img/testcard.png" alt="">
-                   <span class="ThreeDesc"></span>
                 </div>
+                
                 <div class="col-lg-3 text-center">
                     <ul class="list-group lajt">
                         <li ng-repeat="card in cards" class ='list-group-item card'>
@@ -50,9 +43,9 @@
             </div>
             
             <div class="row">
-        <div class="col-lg-2 col-lg-offset-1 text-center" >
+        <div class="col-lg-2 text-center" >
             <ul class="list-group">
-            <li class="list-group-item race-item" ng-repeat="race in races" ng-show='{{race.count}}'>
+            <li class="list-group-item race-item" ng-repeat="race in races">
             <span class="race-name">{{race.name}}</span>
             <span class="race-count">x{{race.count}}</span>
             </li>

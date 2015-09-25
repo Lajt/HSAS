@@ -1,6 +1,0 @@
-node_modules
-
-# for foreman local dev env, contains keys
-.env
-
-/uploads

@@ -7,35 +7,37 @@ app.controller('MainCtrl', [
 		
 		io = io.connect()
 		
-		// Emit ready event
-		io.emit('ready') 
+		// Emit ready event - not working no idea why
+		io.emit('ready')
 		
+		
+		$scope.status = false;
 		
 		// All choosen cards
-		$scope.cards = [
+		$scope.cards = [/*
 			{ name: 'Imp Master', mana: 5, count: 1},
 			{ name: 'Imp Master', mana: 4, count: 1},
 			{ name: 'Imp Master', mana: 2, count: 1},
 			{ name: 'Imp Master', mana: 2, count: 1},
 			{ name: 'Imp Master', mana: 6, count: 1},
-			{ name: 'Imp Master', mana: 0, count: 1}
+			{ name: 'Imp Master', mana: 0, count: 1}*/
 		];
 		
 		// All possible races
 		$scope.races = [
-			{ name: 'Demon', count: 1 },
+			{ name: 'Demon', count: 0 },
 			{ name: 'Dragon', count: 0 },
 			{ name: 'Mech', count: 0 },
-			{ name: 'Murloc', count: 5 },
+			{ name: 'Murloc', count: 0 },
 			{ name: 'Beast', count: 0 },
 			{ name: 'Pirate', count: 0 },
 			{ name: 'Totem', count: 0 }
 		];
 		
 		$scope.currentCards = [
-			{name: '', img: '/img/testcard.png', desc: ''},
-			{name: '', img: '/img/testcard.png', desc: ''},
-			{name: '', img: '/img/testcard.png', desc: ''}
+			{name: '', img: '', desc: ''},
+			{name: '', img: '', desc: ''},
+			{name: '', img: '', desc: ''}
 		];
 		
 		// How many people online on site
@@ -45,15 +47,15 @@ app.controller('MainCtrl', [
 		
 		// New user on site
 		io.on('online', function(data) {
-			console.log(data.count);
-			console.log(typeof(data.count));
+			//console.log(data.count);
+			//console.log(typeof(data.count));
 			$scope.online = data.count;
 			$scope.$apply();
 		})  
 		io.on('detected', function(data) {
-			console.log(data);
-			console.log(typeof(data));
-			console.log(data.length);
+			//console.log(data);
+			//console.log(typeof(data));
+			//console.log(data.length);
 			
 			// render detected cards
 			for(var i =0; i < 3; i++){
@@ -73,18 +75,19 @@ app.controller('MainCtrl', [
 		
 		// New card choosen
 		io.on('update', function(data){
-			
+			$scope.status = true;
+			$scope.$apply();
 			// Log basic info
 			// name: String, className: String, 
 			// cards: [{ cardName: String, cardRace: String, cardMana: Number }]
-			console.log(data.hero);
-			console.log(data.cards);
+			//console.log(data.hero);
+			//console.log(data.cards);
 			// asign choosen cards from database
 			var cardsDB = data.cards;
 			// clear cards array
 			$scope.cards = [];
 			resetMana();
-			
+			resetRaces();
 			// add cards to scope but if duplicate increament count
 			for(var i=0; i < cardsDB.length ; i++){
 				
@@ -105,10 +108,13 @@ app.controller('MainCtrl', [
 					$scope.cards[index].count++;
 				}
 				// check if card has any race, if yes increament count
-				var indexRace = checkRace(cardsDB[i].cardRace);
-					if(indexRace !== -1){
-						$scope.races[indexRace].count++;
-					}
+				
+				if(cardsDB[i].cardRace !== undefined){
+					var indexRace = checkRace(cardsDB[i].cardRace);
+						if(indexRace !== -1){
+							$scope.races[indexRace].count++;
+						}
+				}
 				// add info to mana curve
 				if(cardMana > 7){
 					manaChart.datasets[0].bars[7].value++;
@@ -126,7 +132,7 @@ app.controller('MainCtrl', [
 		})
 		// debug info
 		$scope.test = 'Hello World!';
-		console.log(checkRace("Totem"));
+		//console.log(checkRace("Totem"));
 		
 		// chart with mana curve
 			var barChartData = {
@@ -153,11 +159,17 @@ app.controller('MainCtrl', [
 				}
 			}
 			
+			function resetRaces(){
+				for(var i=0; i < $scope.races.length; i++){
+					$scope.races[i].count = 0;
+				}
+			}
+			
 			// check if input variable exist in race array
 			function checkRace(race){
 				for(var i=0; i < $scope.races.length; i++){
 					if($scope.races[i].name === race){
-						console.log(i);
+						//console.log(i);
 						return i;
 					}
 				}
@@ -167,7 +179,7 @@ app.controller('MainCtrl', [
 			function checkCard(card){
 				for(var i=0; i < $scope.cards.length; i++){
 					if($scope.cards[i].name === card){
-						console.log(i);
+						//console.log(i);
 						return i;
 					}
 				}

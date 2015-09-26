@@ -48,13 +48,29 @@ fs.readFile(__dirname+'/api.key', 'utf8', function(err, data){
 io.on('connection', function(socket){
   	console.log('a user connected');
   	usersCount++;
-	console.log(usersCount);  
+	console.log(usersCount);
+	SendChanges(); // - send changes to all
 	socket.broadcast.emit('online', {count: usersCount});
 	socket.on('disconnect', function(socket){
 		console.log('user disconnected');
 		usersCount--;
 		console.log(usersCount);
 		
+	});
+});
+
+io.on('testt', function(socket){
+	console.log('test');
+	Arena.findOne({ name: currentArena }, function(err, data){
+		if(err){
+			return console.log(err);
+		}
+		if(data===null){
+			return;
+		}
+		socket.broadcast.emit('update', 
+		{ hero: data.className, cards: data.cards }
+		);
 	});
 });
 
@@ -66,6 +82,9 @@ app.get('/', function(req,res){
 
 app.get('/test', function(req, res){
 	SendChanges();
+	//testCard("Imp", function(err, data){
+	//	console.log(data);
+	//});
 	res.send('OK');
 });
 
@@ -87,7 +106,8 @@ app.get('/update/detected/:id1/:id2/:id3', function(req, res){
 });
 
 app.get('/update/card/:id', function(req, res){
-	UpdateCards(req.params.id);
+	//UpdateCards(req.params.id);
+	addCard(req.params.id);
 	res.send('OK');
 });
 
@@ -135,6 +155,29 @@ function getCard(name){
     });
 }
 
+function addCard(cardN){
+	// These code snippets use an open-source library. http://unirest.io/nodejs
+    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+cardN+"?locale=plPL")
+    .header("X-Mashape-Key", apiKey)
+    .header("Accept", "application/json")
+    .end(function (result) {
+    //console.log(result.status, result.headers, result.body);
+    console.log(result.body[0].name);
+	//tempCards.push({name: result.body[0].name, mana: result.body[0].cost, race: result.body[0].race, img: result.body[0].img});
+	Arena.findOne({ name: currentArena }, function(err, data){
+		var picked = { cardName: cardN, cardRace: result.body[0].race, cardMana: result.body[0].cost };
+		data.cards.push(picked);
+		data.save();
+		//tempCards = [];
+		setTimeout(function(){
+			SendChanges();
+		}, 100);
+	});
+    //res.send(JSON.stringify({ a: 1 }, null, 3));
+    });
+}
+
+
 // generate random arena name
 function ArenaNew(){
 	currentArena = 'arena2';
@@ -147,6 +190,7 @@ function UpdateClass(klasa){
 	});
 }
 
+//add new card to databse
 function UpdateCards(card){
 	Arena.findOne({ name: currentArena }, function(err, data){
 		var picked = { cardName: card, cardRace: 'Murloc', cardMana: 10 };
@@ -163,9 +207,17 @@ function DraftedCards(){
 
 function SendChanges(){
 	Arena.findOne({ name: currentArena }, function(err, data){
+		if(err){
+			return console.log(err);
+		}
+		if(data===null){
+			return;
+		}
 		io.sockets.emit('update', 
 		{ hero: data.className, cards: data.cards }
 		);
 	});
 }
+
+
 

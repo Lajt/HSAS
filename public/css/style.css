@@ -40,3 +40,17 @@ body{
 .cards-space{
 	background-color: #FFEEB0;
 }
+
+.arena-status{
+	color: ghostwhite;
+}
+
+.cards-list{
+	float: right;
+}
+.race-list{
+	float: left;
+}
+
+.OneImg{
+}

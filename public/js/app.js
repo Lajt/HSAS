@@ -35,9 +35,9 @@ app.controller('MainCtrl', [
 		];
 		
 		$scope.currentCards = [
-			{name: '', img: '', desc: ''},
-			{name: '', img: '', desc: ''},
-			{name: '', img: '', desc: ''}
+			{name: 'test', img: '/img/testcard.png', desc: ''},
+			{name: 'test', img: '/img/testcard.png', desc: ''},
+			{name: 'test', img: '/img/testcard.png', desc: ''}
 		];
 		
 		// How many people online on site
@@ -84,6 +84,7 @@ app.controller('MainCtrl', [
 			//console.log(data.cards);
 			// asign choosen cards from database
 			var cardsDB = data.cards;
+			doEffect(cardsDB[cardsDB.length-1].cardName);
 			// clear cards array
 			$scope.cards = [];
 			resetMana();
@@ -184,5 +185,12 @@ app.controller('MainCtrl', [
 					}
 				}
 				return -1;
+			}
+			function doEffect(nameC){
+				for(var i=0; i < $scope.currentCards.length; i++){
+					if($scope.currentCards[i].name === nameC){
+						$(".OneImg:eq("+i+")").effect( "highlight", {color:"#669966"}, 3000 ); 
+					}
+				}
 			}
 }]);

@@ -123,7 +123,7 @@ app.get('/arena/:id', function(req, res){
 app.get('/api/card/:id', function(req,res){
    
    // These code snippets use an open-source library. http://unirest.io/nodejs
-    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+req.params.id+"?locale=plPL")
+    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+req.params.id+"?locale=enEN")
     .header("X-Mashape-Key", apiKey)
     .header("Accept", "application/json")
     .end(function (result) {
@@ -141,7 +141,7 @@ console.log('Listening on port: ', port);
 
 function getCard(name){
 	// These code snippets use an open-source library. http://unirest.io/nodejs
-    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+name+"?locale=plPL")
+    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+name+"?locale=enEN")
     .header("X-Mashape-Key", apiKey)
     .header("Accept", "application/json")
     .end(function (result) {
@@ -157,7 +157,7 @@ function getCard(name){
 
 function addCard(cardN){
 	// These code snippets use an open-source library. http://unirest.io/nodejs
-    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+cardN+"?locale=plPL")
+    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+cardN+"?locale=enEN")
     .header("X-Mashape-Key", apiKey)
     .header("Accept", "application/json")
     .end(function (result) {

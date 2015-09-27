@@ -35,9 +35,9 @@ app.controller('MainCtrl', [
 		];
 		
 		$scope.currentCards = [
-			{name: 'test', img: '/img/testcard.png', desc: ''},
-			{name: 'test', img: '/img/testcard.png', desc: ''},
-			{name: 'test', img: '/img/testcard.png', desc: ''}
+			{name: '', img: '', desc: ''},
+			{name: '', img: '', desc: ''},
+			{name: '', img: '', desc: ''}
 		];
 		
 		// How many people online on site
@@ -56,7 +56,9 @@ app.controller('MainCtrl', [
 			//console.log(data);
 			//console.log(typeof(data));
 			//console.log(data.length);
-			
+			if($scope.status === false){
+				showArena();
+			}
 			// render detected cards
 			for(var i =0; i < 3; i++){
 				$scope.currentCards[i].name = data[i].name;
@@ -75,8 +77,9 @@ app.controller('MainCtrl', [
 		
 		// New card choosen
 		io.on('update', function(data){
-			$scope.status = true;
-			$scope.$apply();
+			if($scope.status === false){
+				showArena();
+			}
 			// Log basic info
 			// name: String, className: String, 
 			// cards: [{ cardName: String, cardRace: String, cardMana: Number }]
@@ -192,5 +195,10 @@ app.controller('MainCtrl', [
 						$(".OneImg:eq("+i+")").effect( "highlight", {color:"#669966"}, 3000 ); 
 					}
 				}
+			}
+			
+			function showArena(){
+				$scope.status = true;
+				$scope.$apply();
 			}
 }]);

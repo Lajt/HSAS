@@ -8,11 +8,13 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var lajt = require('./lib/lajt.js');
+
 var port = process.env.port || 9000;
 
 mongoose.connect('mongodb://localhost/test');
 
-var currentArena = 'arena1';
+var currentArena = '';
 var currentCards = [];
 var tempCards = [];
 var usersCount = 0;
@@ -34,14 +36,7 @@ fs.readFile(__dirname+'/api.key', 'utf8', function(err, data){
 });
 
 //var kitty = new Cat({ name: 'Piotr', gatunek: 'wymarly' });
-//var arenka = new Arena({ name: 'arena1', className: 'Warrior' });
-
-//arenka.save(function(err){
-//	if(err){
-//		console.log('mial');
-//	}
-//});
-
+console.log(lajt());
 
 
 //UpdateArena('Shaman');
@@ -90,11 +85,14 @@ app.get('/test', function(req, res){
 
 app.get('/update/newarena', function(req, res){
 	ArenaNew();
+	console.log('UPDATE: New arena started: '+currentArena);
 	res.send('arena2');
 });
 
 app.get('/update/hero/:id', function(req, res){
 	UpdateClass(req.params.id);
+	console.log('UPDATE: Hero Picked: '+req.params.id);
+	res.send('OK');
 });
 
 app.get('/update/detected/:id1/:id2/:id3', function(req, res){
@@ -102,11 +100,13 @@ app.get('/update/detected/:id1/:id2/:id3', function(req, res){
 	getCard(req.params.id1);
 	getCard(req.params.id2);
 	getCard(req.params.id3);
+	console.log('UPDATE: Card Drafted: ');
 	res.send('OK');
 });
 
 app.get('/update/card/:id', function(req, res){
 	//UpdateCards(req.params.id);
+	console.log('UPDATE: Card Picked: '+req.params.id);
 	addCard(req.params.id);
 	res.send('OK');
 });
@@ -178,11 +178,22 @@ function addCard(cardN){
 }
 
 
-// generate random arena name
+
 function ArenaNew(){
-	currentArena = 'arena2';
+	// generate random arena name
+	currentArena = lajt();
+	
+	// create new arena record in DB
+	var arenka = new Arena({ name: currentArena, className: 'none' });
+
+	arenka.save(function(err){
+		if(err){
+			console.log("DB save error.");
+		}
+	})
 }
 
+// update class to DB
 function UpdateClass(klasa){
 	Arena.findOne({ name: currentArena }, function(err, data){
 		data.className = klasa;
@@ -217,6 +228,7 @@ function SendChanges(){
 		{ hero: data.className, cards: data.cards }
 		);
 	});
+	console.log('Sent update to '+usersCount+' users.');
 }
 
 

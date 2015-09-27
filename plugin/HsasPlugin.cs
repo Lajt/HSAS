@@ -75,6 +75,7 @@ namespace HsasPlugin
         {
             // Do something with the information
             Logger.WriteLine("New Arena: " + arenadata.deckname);
+            var res = await MakeApiCall(host + "/update/newarena");
         }
 
         // Called when the heroes are detected

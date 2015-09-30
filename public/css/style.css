@@ -30,6 +30,9 @@ body{
 
 .race-item{
 	background-color: green;
+	-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
 }
 .race-count{
 	background-color: black;
@@ -53,4 +56,17 @@ body{
 }
 
 .OneImg{
+}
+
+.lajt{
+	-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	background-color: green;
+	border-top: 1px solid white;
+	border-radius:4px;
+}
+
+.cards-span{
+	font-size: 20px;
 }

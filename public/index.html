@@ -34,6 +34,7 @@
                 
                 <div class="cards-list col-lg-3 text-center">
                     <ul class="list-group lajt">
+                        <span class="cards-span">Card: {{cards.length}}/30</span>
                         <li ng-repeat="card in cards | orderBy: '+mana'" class ='list-group-item card'>
                             <span class="card-mana">{{card.mana}}</span>
                             <span class ="card-name">{{card.name}}</span>
@@ -44,7 +45,7 @@
                 
                 <div class="race-list col-lg-2 text-center" >
             <ul class="list-group">
-            <li class="list-group-item race-item" ng-repeat="race in races" ng-show='race.count'>
+            <li class="list-group-item race-item" ng-repeat="race in races | orderBy: '-count'" ng-show='race.count'>
             <span class="race-name">{{race.name}}</span>
             <span class="race-count">x{{race.count}}</span>
             </li>
@@ -52,7 +53,7 @@
         </div>
             <div class="col-xs-5 col-md-3 col-lg-3">
            
-                    <div style="">
+                    <div>
                     <canvas id="canvas" height="300" width="500"></canvas>
                     </div>
                     

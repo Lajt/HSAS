@@ -34,7 +34,7 @@
                 
                 <div class="cards-list col-lg-3 text-center">
                     <ul class="list-group lajt">
-                        <li ng-repeat="card in cards" class ='list-group-item card'>
+                        <li ng-repeat="card in cards | orderBy: '+mana'" class ='list-group-item card'>
                             <span class="card-mana">{{card.mana}}</span>
                             <span class ="card-name">{{card.name}}</span>
                             <span class ="card-count">x{{card.count}}</span>

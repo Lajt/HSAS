@@ -1,9 +1,10 @@
 body{
 	background-color: #084D68;
+	
 }
 
 .top-info{
-	background-color: #084D68; 
+	color: black;
 	height: 20px; 
 	margin-bottom: 50px;
 }
@@ -69,4 +70,7 @@ body{
 
 .cards-span{
 	font-size: 20px;
+}
+
+.draft-cards{
 }

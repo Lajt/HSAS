@@ -147,7 +147,15 @@ function getCard(name){
     .end(function (result) {
     //console.log(result.status, result.headers, result.body);
     console.log(result.body[0].name);
-	tempCards.push({name: result.body[0].name, mana: result.body[0].cost, race: result.body[0].race, img: result.body[0].img});
+	var mana = result.body[0].cost;
+	if(mana === null || mana === undefined){
+		mana = result.body[1].cost;		
+		if(mana === null || mana === undefined){
+			mana = 0;
+		}
+	}
+	
+	tempCards.push({name: result.body[0].name, mana: mana, race: result.body[0].race, img: result.body[0].img});
 	if(tempCards.length === 3){
 		DraftedCards();
 	}

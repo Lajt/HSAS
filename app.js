@@ -172,8 +172,15 @@ function addCard(cardN){
     //console.log(result.status, result.headers, result.body);
     console.log(result.body[0].name);
 	//tempCards.push({name: result.body[0].name, mana: result.body[0].cost, race: result.body[0].race, img: result.body[0].img});
+	var mana = result.body[0].cost;
+	if(mana === null || mana === undefined){
+		mana = result.body[1].cost;		
+		if(mana === null || mana === undefined){
+			mana = 0;
+		}
+	}
 	Arena.findOne({ name: currentArena }, function(err, data){
-		var picked = { cardName: cardN, cardRace: result.body[0].race, cardMana: result.body[0].cost };
+		var picked = { cardName: cardN, cardRace: result.body[0].race, cardMana: mana };
 		data.cards.push(picked);
 		data.save();
 		//tempCards = [];

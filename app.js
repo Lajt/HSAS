@@ -80,13 +80,13 @@ app.get('/test', function(req, res){
 	//testCard("Imp", function(err, data){
 	//	console.log(data);
 	//});
-	res.send('OK');
+	res.send(200, 'OK');
 });
 
 app.get('/update/newarena', function(req, res){
 	ArenaNew();
 	console.log('UPDATE: New arena started: '+currentArena);
-	res.send('arena2');
+	res.send(currentArena);
 });
 
 app.get('/update/hero/:id', function(req, res){
@@ -96,18 +96,22 @@ app.get('/update/hero/:id', function(req, res){
 });
 
 app.get('/update/detected/:id1/:id2/:id3', function(req, res){
-	// detected cards just emit socket io info
-	getCard(req.params.id1);
-	getCard(req.params.id2);
-	getCard(req.params.id3);
-	console.log('UPDATE: Card Drafted: ');
+	
+	for(var card in req.params){
+		apiCall(req.params[card], getCard);
+	}
+	
+	console.log('UPDATE: Cards Drafted');
 	res.send('OK');
 });
 
 app.get('/update/card/:id', function(req, res){
 	//UpdateCards(req.params.id);
 	console.log('UPDATE: Card Picked: '+req.params.id);
-	addCard(req.params.id);
+	//addCard(req.params.id);
+	
+	apiCall(req.params.id, addCard);
+	
 	res.send('OK');
 });
 
@@ -122,65 +126,39 @@ app.get('/arena/:id', function(req, res){
 
 app.get('/api/card/:id', function(req,res){
    
-   // These code snippets use an open-source library. http://unirest.io/nodejs
-    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+req.params.id+"?locale=enEN")
-    .header("X-Mashape-Key", apiKey)
-    .header("Accept", "application/json")
-    .end(function (result) {
-    console.log(result.status, result.headers, result.body);
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(result.body));
-    //res.send(JSON.stringify({ a: 1 }, null, 3));
-    });
-   
+	apiCall(req.params.id, function(data){
+		res.setHeader('Content-Type', 'application/json');
+		res.send(JSON.stringify(data)); 
+   });
 });
 
 http.listen(port);
 //app.listen(port);
 console.log('Listening on port: ', port);
 
-function getCard(name){
-	// These code snippets use an open-source library. http://unirest.io/nodejs
-    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+name+"?locale=enEN")
+function apiCall(cardName, callback){
+    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+cardName+"?locale=enEN")
     .header("X-Mashape-Key", apiKey)
     .header("Accept", "application/json")
     .end(function (result) {
     //console.log(result.status, result.headers, result.body);
-    console.log(result.body[0].name);
-	var mana = result.body[0].cost;
-	if(mana === null || mana === undefined){
-		mana = result.body[1].cost;		
-		if(mana === null || mana === undefined){
-			mana = 0;
-		}
-	}
-	
-	tempCards.push({name: result.body[0].name, mana: mana, race: result.body[0].race, img: result.body[0].img});
-	if(tempCards.length === 3){
-		DraftedCards();
-	}
-    //res.send(JSON.stringify({ a: 1 }, null, 3));
+		return callback(result.body);
     });
 }
 
-function addCard(cardN){
-	// These code snippets use an open-source library. http://unirest.io/nodejs
-    unirest.get("https://omgvamp-hearthstone-v1.p.mashape.com/cards/"+cardN+"?locale=enEN")
-    .header("X-Mashape-Key", apiKey)
-    .header("Accept", "application/json")
-    .end(function (result) {
-    //console.log(result.status, result.headers, result.body);
-    console.log(result.body[0].name);
-	//tempCards.push({name: result.body[0].name, mana: result.body[0].cost, race: result.body[0].race, img: result.body[0].img});
-	var mana = result.body[0].cost;
-	if(mana === null || mana === undefined){
-		mana = result.body[1].cost;		
-		if(mana === null || mana === undefined){
-			mana = 0;
-		}
+function getCard(results){
+	
+	tempCards.push({name: results[0].name, mana: results[0].cost || results[1].cost, race: results[0].race, img: results[0].img || results[1].img });
+	if(tempCards.length === 3){
+		DraftedCards();
 	}
+	
+}
+
+function addCard(results){
+	
 	Arena.findOne({ name: currentArena }, function(err, data){
-		var picked = { cardName: cardN, cardRace: result.body[0].race, cardMana: mana };
+		var picked = { cardName: results[0].name, cardRace: results[0].race, cardMana: results[0].cost || results[1].cost };
 		data.cards.push(picked);
 		data.save();
 		//tempCards = [];
@@ -188,11 +166,8 @@ function addCard(cardN){
 			SendChanges();
 		}, 100);
 	});
-    //res.send(JSON.stringify({ a: 1 }, null, 3));
-    });
+	
 }
-
-
 
 function ArenaNew(){
 	// generate random arena name
